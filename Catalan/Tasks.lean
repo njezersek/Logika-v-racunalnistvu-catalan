@@ -3,6 +3,7 @@ import Mathlib.Data.Set.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Nat.Factorial.Basic
 open BigOperators
 open Finset
 open Finset.antidiagonal
@@ -91,10 +92,40 @@ theorem catalan_def (n : ℕ) : Nat.choose (2*n) (n+1) = n / (n+1) * Nat.choose 
 -- example (c a b : ℝ ) : 1 = a*c - b*c := by
 --   rw [← mul_sub_right_distrib]
 
+theorem n_factorial_n_dec_eq_factorial_n (n : ℕ) (h : 0 < n) : n * Nat.factorial (n - 1) = Nat.factorial n := by
+  induction n with
+  | zero => contradiction
+  | succ =>
+    rw [Nat.succ_sub_one]
+    rw [Nat.factorial_succ]
+
+theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
+  rw [Nat.choose_eq_factorial_div_factorial]
+  rw [Nat.factorial_succ]
+  nth_rw 2 [Nat.two_mul]
+  rw [Nat.add_sub_add_left]
+  rw [← Nat.mul_div_mul_left _ _ h]
+  nth_rw 2 [Nat.mul_comm n]
+  rw [Nat.mul_assoc]
+  nth_rw 6 [Nat.mul_comm]
+  rw [n_factorial_n_dec_eq_factorial_n n h]
+  nth_rw 1 [← Nat.mul_div_assoc]
 
 
-theorem eq_from_catalan_def (n : ℕ) : (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
+
+example (n a b) (h: 0 < n) : n * (a / (n * b)) = a / b := by
+  rw [← Nat.mul_div_assoc]
+  rw [Nat.mul_div_mul_left]
+  exact h
+
+
+
+example (n a b : ℕ) (h : 0 < n) : a / b = 1 := by
+  rw [← Nat.mul_div_mul_left _ _ h] -- multiply the fraction by n (infered from h)
   sorry
+
+
+
 
 -- theorem choose_eq (n : ℕ) : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n - Nat.choose (2*n) (n+1)) := by
 --   cases n with
@@ -131,6 +162,9 @@ theorem choose_eq (n : ℕ) : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n -
     rw [← Nat.mul_sub_right_distrib]
     rw [Nat.add_comm, Nat.add_sub_cancel, Nat.one_mul, Nat.add_comm]
     rw [eq_from_catalan_def n]
+    repeat exact h2
+
+
 
 
 theorem choose_2n_n_divisible_by_n_plus_1 (n : ℕ) : (n+1) ∣ Nat.choose (2*n) n := by

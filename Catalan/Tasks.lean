@@ -99,6 +99,9 @@ theorem n_factorial_n_dec_eq_factorial_n (n : ℕ) (h : 0 < n) : n * Nat.factori
     rw [Nat.succ_sub_one]
     rw [Nat.factorial_succ]
 
+theorem choose_2n_n_eq_factorial (n : ℕ) (h : 0 < n) : Nat.choose (2*n) n = Nat.factorial (2*n) / (Nat.factorial n * Nat.factorial n) := by
+  sorry -- this should be easy
+
 theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
   rw [Nat.choose_eq_factorial_div_factorial]
   rw [Nat.factorial_succ]
@@ -110,6 +113,12 @@ theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1
   nth_rw 6 [Nat.mul_comm]
   rw [n_factorial_n_dec_eq_factorial_n n h]
   nth_rw 1 [← Nat.mul_div_assoc]
+  nth_rw 1 [Nat.mul_assoc]
+  rw [Nat.mul_div_mul_left]
+  rw [Nat.mul_div_assoc]
+  rw [choose_2n_n_eq_factorial n h]
+
+
 
 
 
@@ -117,6 +126,7 @@ example (n a b) (h: 0 < n) : n * (a / (n * b)) = a / b := by
   rw [← Nat.mul_div_assoc]
   rw [Nat.mul_div_mul_left]
   exact h
+  sorry
 
 
 

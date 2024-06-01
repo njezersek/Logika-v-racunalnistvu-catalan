@@ -119,6 +119,78 @@ theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1
   rw [choose_2n_n_eq_factorial n h]
 
 
+theorem n_eq_2n_minus_n (n : ℕ) : n = 2*n - n := by
+  rw [Nat.two_mul]
+  rw [Nat.add_sub_cancel]
+
+
+theorem eq_from_catalan_def2 (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
+  have h2 : 0 < Nat.factorial (n+1) * Nat.factorial (2*n - (n+1)) := by
+    apply Nat.mul_pos
+    exact Nat.factorial_pos (n+1)
+    exact Nat.factorial_pos (2*n - (n+1))
+  -- multiply both sides by (n+1)! (2n-(n+1))!
+  apply Nat.eq_of_mul_eq_mul_right h2
+  nth_rw 1 [Nat.mul_assoc]
+  nth_rw 2 [← Nat.mul_assoc]
+  -- expand binomial by definition
+  rw [Nat.choose_mul_factorial_mul_factorial]
+  -- simplify 2n - (n+1) = n-1
+  nth_rw 3 [Nat.two_mul]
+  rw [Nat.add_sub_add_left]
+  -- expand (n+1)! = (n+1) n!
+  rw [Nat.factorial_succ]
+  -- rearange the equation to cancel (n+1)
+  nth_rw 3 [Nat.mul_comm]
+  rw [Nat.mul_assoc]
+  rw [Nat.mul_assoc]
+  rw [Nat.mul_right_inj] -- cancel (n+1)
+  -- apply equality n (n-1)! = n!
+  nth_rw 2 [← Nat.mul_assoc]
+  nth_rw 4 [Nat.mul_comm ]
+  rw [n_factorial_n_dec_eq_factorial_n]
+  -- transform the right side to (choose 2n n) n! n!
+  rw [← Nat.mul_assoc]
+  nth_rw 2 [Nat.mul_comm]
+  -- transform the last factorial from n! to (2n-n)!
+  nth_rw 5 [n_eq_2n_minus_n n]
+  rw [← Nat.mul_assoc]
+  rw [Nat.choose_mul_factorial_mul_factorial]
+  -- finsih remaining goals (inequalities)
+  rw [Nat.two_mul]
+  apply Nat.le_add_right
+  exact h
+  rw[Nat.add_one]
+  apply Nat.succ_ne_zero
+  omega
+
+
+
+
+
+-- kako se pokrajša enačbo
+example (n a b : ℕ ) (h : n ≠ 0) : n * a = n * b := by
+  apply Nat.mul_right_inj at h
+  rw [h]
+  -- a = b
+
+
+-- kako se pokrajša enačbo
+example (n a b : ℕ ) (h : n ≠ 0) : n * a = n * b := by
+  rw [Nat.mul_right_inj]
+
+  -- a = b
+
+
+
+
+example (n : ℕ ) : 2 * n - (n + 1) = n - 1 := by
+  rw [Nat.two_mul]
+  rw [Nat.add_sub_add_left]
+
+
+
+
 
 
 

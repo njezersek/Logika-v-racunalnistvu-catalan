@@ -68,29 +68,6 @@ inductive ballot : (sum n : ℕ ) → Type
 
 
 -- 6. prove that C(2n, n) is divisible by (n+1) for every n
-#eval Nat.choose 6 3 -- returns 20
-
--- theorem choose_2n_n_divisible_by_n_plus_1 : (n : ℕ) →
---   Nat.choose (2*n) n ∣ (n+1) := by
---   intro n
---   have h : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n - Nat.choose (2*n) (n+1))
-
-
-theorem catalan_def (n : ℕ) : Nat.choose (2*n) (n+1) = n / (n+1) * Nat.choose (2*n) n := by
-  sorry
-
-
--- example (n : ℕ) : 1 / (n+1) * Nat.choose (2*n) n = Nat.choose (2*n) n - Nat.choose (2*n) (n+1) := by
---   rw [catalan_def]
-
--- example (n : ℕ) : 1 / (n + 1) * Nat.choose (2 * n) n = Nat.choose (2 * n) n - n / (n + 1) * Nat.choose (2 * n) n := by
-
--- example (n K : ℕ) : 1 / (n + 1) * K = K - n / (n + 1) * (K : ℝ)  := by
---   nth_rw 2 [← one_mul K] -- = 1 * K  -  n / (n + 1) * K
---   rw [← mul_sub_right_distrib]
-
--- example (c a b : ℝ ) : 1 = a*c - b*c := by
---   rw [← mul_sub_right_distrib]
 
 theorem n_factorial_n_dec_eq_factorial_n (n : ℕ) (h : 0 < n) : n * Nat.factorial (n - 1) = Nat.factorial n := by
   induction n with
@@ -99,32 +76,11 @@ theorem n_factorial_n_dec_eq_factorial_n (n : ℕ) (h : 0 < n) : n * Nat.factori
     rw [Nat.succ_sub_one]
     rw [Nat.factorial_succ]
 
-theorem choose_2n_n_eq_factorial (n : ℕ) (h : 0 < n) : Nat.choose (2*n) n = Nat.factorial (2*n) / (Nat.factorial n * Nat.factorial n) := by
-  sorry -- this should be easy
-
-theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
-  rw [Nat.choose_eq_factorial_div_factorial]
-  rw [Nat.factorial_succ]
-  nth_rw 2 [Nat.two_mul]
-  rw [Nat.add_sub_add_left]
-  rw [← Nat.mul_div_mul_left _ _ h]
-  nth_rw 2 [Nat.mul_comm n]
-  rw [Nat.mul_assoc]
-  nth_rw 6 [Nat.mul_comm]
-  rw [n_factorial_n_dec_eq_factorial_n n h]
-  nth_rw 1 [← Nat.mul_div_assoc]
-  nth_rw 1 [Nat.mul_assoc]
-  rw [Nat.mul_div_mul_left]
-  rw [Nat.mul_div_assoc]
-  rw [choose_2n_n_eq_factorial n h]
-
-
 theorem n_eq_2n_minus_n (n : ℕ) : n = 2*n - n := by
   rw [Nat.two_mul]
   rw [Nat.add_sub_cancel]
 
-
-theorem eq_from_catalan_def2 (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
+theorem eq_from_catalan_def (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+1) = n * Nat.choose (2*n) n := by
   have h2 : 0 < Nat.factorial (n+1) * Nat.factorial (2*n - (n+1)) := by
     apply Nat.mul_pos
     exact Nat.factorial_pos (n+1)
@@ -144,7 +100,7 @@ theorem eq_from_catalan_def2 (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+
   nth_rw 3 [Nat.mul_comm]
   rw [Nat.mul_assoc]
   rw [Nat.mul_assoc]
-  rw [Nat.mul_right_inj] -- cancel (n+1)
+  rw [Nat.mul_right_inj] -- cancel (n+1) on both sides
   -- apply equality n (n-1)! = n!
   nth_rw 2 [← Nat.mul_assoc]
   nth_rw 4 [Nat.mul_comm ]
@@ -163,59 +119,6 @@ theorem eq_from_catalan_def2 (n : ℕ) (h : 0 < n): (n+1) * Nat.choose (2*n) (n+
   rw[Nat.add_one]
   apply Nat.succ_ne_zero
   omega
-
-
-
-
-
--- kako se pokrajša enačbo
-example (n a b : ℕ ) (h : n ≠ 0) : n * a = n * b := by
-  apply Nat.mul_right_inj at h
-  rw [h]
-  -- a = b
-
-
--- kako se pokrajša enačbo
-example (n a b : ℕ ) (h : n ≠ 0) : n * a = n * b := by
-  rw [Nat.mul_right_inj]
-
-  -- a = b
-
-
-
-
-example (n : ℕ ) : 2 * n - (n + 1) = n - 1 := by
-  rw [Nat.two_mul]
-  rw [Nat.add_sub_add_left]
-
-
-
-
-
-
-
-example (n a b) (h: 0 < n) : n * (a / (n * b)) = a / b := by
-  rw [← Nat.mul_div_assoc]
-  rw [Nat.mul_div_mul_left]
-  exact h
-  sorry
-
-
-
-example (n a b : ℕ) (h : 0 < n) : a / b = 1 := by
-  rw [← Nat.mul_div_mul_left _ _ h] -- multiply the fraction by n (infered from h)
-  sorry
-
-
-
-
--- theorem choose_eq (n : ℕ) : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n - Nat.choose (2*n) (n+1)) := by
---   cases n with
---   | zero => rfl
---   | succ m => generalize Nat.succ m = mm
---       have h : 0 < mm := by
---         sorry
-
 
 -- get from not n = 0 to 0 < n
 theorem not_eq_zero_imp_zero_ge (n : ℕ) : ¬ n = 0 → 0 < n := by
@@ -245,9 +148,6 @@ theorem choose_eq (n : ℕ) : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n -
     rw [Nat.add_comm, Nat.add_sub_cancel, Nat.one_mul, Nat.add_comm]
     rw [eq_from_catalan_def n]
     repeat exact h2
-
-
-
 
 theorem choose_2n_n_divisible_by_n_plus_1 (n : ℕ) : (n+1) ∣ Nat.choose (2*n) n := by
   rw [choose_eq]

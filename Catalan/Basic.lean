@@ -4,6 +4,9 @@ open BigOperators
 open Finset
 open Finset.antidiagonal
 
+-- ta datoteka se NE uporablja
+-- je samo arhiv zadev iz vaj
+
 #eval 1 + 1
 
 inductive binary_tree : Type

@@ -64,3 +64,76 @@ inductive ballot : (sum n : ℕ ) → Type
 -- Fin C_{n+1} ≃ Σ_{i=0}^n (Fin C_i) × (Fin C_{n-i})
 
 -- 3. construct a bijection between full binary trees (with n nodes) and the type Fin C_n
+
+-- 7. prove that C_n = 1/(n+1) * (2n choose n)
+
+theorem catalan_alt (n : ℕ) : my_catalan n * (n+1) = Nat.choose (2*n) n := by
+sorry
+
+-- 8. construct an isomorphism Fin C_n ≃ DyckPath 2n
+
+-- dyck path of length
+inductive dyck_path : (sum len : ℕ) → Type
+| nil : dyck_path 0 0
+| up : dyck_path sum len → dyck_path (sum+1) (len+1)
+| down : dyck_path (sum+1) len → dyck_path sum (len+1)
+
+-- example : dyck_path 0 4 := (dyck_path.down (dyck_path.down (dyck_path.up (dyck_path.up dyck_path.nil)))) -- OK
+-- example : dyck_path 0 4 := (dyck_path.up (dyck_path.down (dyck_path.up (dyck_path.up dyck_path.nil)))) -- NOT OK
+
+
+example (n : ℕ) : Fin 1 ≃ dyck_path 0 0 := by
+  let fwd : Fin 1 → dyck_path 0 0 := fun i => dyck_path.nil
+  let bwd : dyck_path 0 0 → Fin 1 := fun i => 0
+  apply Equiv.mk fwd bwd
+  intro p
+
+
+example (n : ℕ) : Fin 1 ≃ Fin 1 := by
+  let fwd : Fin 1 → Fin 1 := fun i => i
+  let bwd : Fin 1 → Fin 1 := fun i => i
+  apply Equiv.mk fwd bwd
+  intro
+
+
+
+
+theorem catalan_dyck (n : ℕ) : Fin (my_catalan n) ≃ dyck_path 0 (2*n) := by
+  induction n with
+  | zero =>
+    simp
+    rw [my_catalan]
+    let fwd : Fin 1 → dyck_path 0 0 := fun i => dyck_path.nil
+    let bwd : dyck_path 0 0 → Fin 1 := fun i => ⟨0, Nat.zero_lt_succ 0⟩
+    apply Equiv.mk fwd bwd
+
+
+
+
+--
+-- EXAMPLE proof of equivalence between Bool and Fin 2
+--
+def bool_to_fin (b : Bool) : Fin 2 := if b then 1 else 0
+def fin_to_bool (i : Fin 2) : Bool := i.val == 1
+
+#eval bool_to_fin true -- returns 1
+#eval fin_to_bool 1 -- returns true
+
+example : Bool ≃ Fin 2 := by
+  -- construct the equivalence
+  apply Equiv.mk bool_to_fin fin_to_bool
+  {
+    intro b
+    rw[bool_to_fin]
+    rw[fin_to_bool]
+    cases b with
+    | false => simp
+    | true => simp
+  }
+  {
+    intro n
+    rw[fin_to_bool]
+    rw[bool_to_fin]
+    fin_cases n
+    repeat simp
+  }

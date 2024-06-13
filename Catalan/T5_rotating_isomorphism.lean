@@ -83,4 +83,3 @@ def rotating_isomorphism : plane_tree ≃ full_binary_tree :=
     left_inv := left_inverse,
     right_inv := right_inverse
   }
-

@@ -1,9 +1,4 @@
 import Mathlib
-import Mathlib.Data.Set.Basic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.Factorial.Basic
 
 inductive plane_tree : Type
 | node : List plane_tree → plane_tree

@@ -13,8 +13,8 @@ Below is a list of finished tasks included in this repository:
   - Definition of type of ballot sequences of length n.
 2. **Large tasks:**
   - (T4) Construction of bijection list PlaneTree ∼= PlaneTree.
-  - (T5) Rotating isomorphism
+  - (T5) Construction of the rotating isomorphism.
   - (T6) Proof that (2n choose n) is divisible by (n+1).
 
-All the code is located in the /Catalan folder. All small tasks are gathered in the Tasks.lean file, while each large tasks has it's own seperate file.
+All the code is located in the /Catalan folder. All small tasks are gathered in the Tasks.lean file, while each large task has it's own seperate file.
 

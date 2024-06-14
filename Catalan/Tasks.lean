@@ -25,7 +25,7 @@ def my_catalan : ℕ → ℕ
 
 inductive plane_tree : Type
 | node : List plane_tree → plane_tree
-
+deriving Repr
 
 -- 3. formalize the concept of full binary trees
 -- a full binary tree is a rooted tree where each node has either 0 or 2 children
@@ -33,14 +33,14 @@ inductive plane_tree : Type
 inductive full_binary_tree : Type
 | leaf : full_binary_tree
 | node : full_binary_tree → full_binary_tree → full_binary_tree
-
+deriving Repr
 
 -- 4. construct the type of full binary trees with n nodes, not counting the leaves
 
 inductive full_binary_tree_of_size : (n : ℕ) → Type
 | leaf : full_binary_tree_of_size 0
 | node : full_binary_tree_of_size n → full_binary_tree_of_size m → full_binary_tree_of_size (n+m+1)
-
+deriving Repr
 
 -- 5. define the type of ballot sequences of length n
 -- a ballot sequence is a sequence of +1 and -1 such that the partial sums are always non-negative
@@ -54,86 +54,80 @@ inductive ballot : (sum n : ℕ ) → Type
 -- #check (ballot.minus (ballot.minus (ballot.minus ballot.nil))) --   minus, minus, minus  NOT OK
 
 
--- THE BIG TASKS
-
--- 1. construct a bijection
--- Fin ( ∑_{i < n} k_i ) ≃ Σ_{i: Fin n} Fin k_i
--- for every k: Fin n -> ℕ
-
--- 2. construct a bijection
--- Fin C_{n+1} ≃ Σ_{i=0}^n (Fin C_i) × (Fin C_{n-i})
-
--- 3. construct a bijection between full binary trees (with n nodes) and the type Fin C_n
-
--- 7. prove that C_n = 1/(n+1) * (2n choose n)
-
-theorem catalan_alt (n : ℕ) : my_catalan n * (n+1) = Nat.choose (2*n) n := by
-sorry
-
--- 8. construct an isomorphism Fin C_n ≃ DyckPath 2n
-
--- dyck path of length
-inductive dyck_path : (sum len : ℕ) → Type
-| nil : dyck_path 0 0
-| up : dyck_path sum len → dyck_path (sum+1) (len+1)
-| down : dyck_path (sum+1) len → dyck_path sum (len+1)
-
--- example : dyck_path 0 4 := (dyck_path.down (dyck_path.down (dyck_path.up (dyck_path.up dyck_path.nil)))) -- OK
--- example : dyck_path 0 4 := (dyck_path.up (dyck_path.down (dyck_path.up (dyck_path.up dyck_path.nil)))) -- NOT OK
-
-
-example (n : ℕ) : Fin 1 ≃ dyck_path 0 0 := by
-  let fwd : Fin 1 → dyck_path 0 0 := fun i => dyck_path.nil
-  let bwd : dyck_path 0 0 → Fin 1 := fun i => 0
-  apply Equiv.mk fwd bwd
-  intro p
-
-
-example (n : ℕ) : Fin 1 ≃ Fin 1 := by
-  let fwd : Fin 1 → Fin 1 := fun i => i
-  let bwd : Fin 1 → Fin 1 := fun i => i
-  apply Equiv.mk fwd bwd
-  intro
 
 
 
+-- functions from lab exercises
 
-theorem catalan_dyck (n : ℕ) : Fin (my_catalan n) ≃ dyck_path 0 (2*n) := by
-  induction n with
-  | zero =>
-    simp
-    rw [my_catalan]
-    let fwd : Fin 1 → dyck_path 0 0 := fun i => dyck_path.nil
-    let bwd : dyck_path 0 0 → Fin 1 := fun i => ⟨0, Nat.zero_lt_succ 0⟩
-    apply Equiv.mk fwd bwd
+-- inductive binary_tree : Type
+-- | leaf : binary_tree
+-- | node₁ : binary_tree → binary_tree
+-- | node₂ : binary_tree → binary_tree → binary_tree
+
+-- def binary_tree.height : binary_tree → ℕ
+-- | .leaf => 1
+-- | (binary_tree.node₁ t) => 1 + t.height
+-- | (binary_tree.node₂ t₁ t₂) => 1 + max t₁.height t₂.height
+
+-- def binary_tree.number_of_nodes : binary_tree → ℕ
+-- | .leaf => 1
+-- | (binary_tree.node₁ t) => 1 + t.number_of_nodes
+-- | (binary_tree.node₂ t₁ t₂) => 1 + t₁.number_of_nodes + t₂.number_of_nodes
+
+-- def full_binary_tree.height : full_binary_tree → ℕ
+-- | .leaf => 1
+-- | (full_binary_tree.node t₁ t₂) => 1 + max t₁.height t₂.height
+
+-- def full_binary_tree.number_of_nodes : full_binary_tree → ℕ
+-- | .leaf => 1
+-- | (full_binary_tree.node t₁ t₂) => 1 + t₁.number_of_nodes + t₂.number_of_nodes
+
+-- def binary_tree_of_full_binary_tree : full_binary_tree → binary_tree
+-- | full_binary_tree.leaf => binary_tree.leaf
+-- | (full_binary_tree.node t₁ t₂) => binary_tree.node₂ (binary_tree_of_full_binary_tree t₁) (binary_tree_of_full_binary_tree t₂)
+
+-- theorem full_binary_tree_height_eq_binary_tree_of_full_binary_tree :
+--   (T : full_binary_tree) →
+--   T.height = (binary_tree_of_full_binary_tree T).height := by
+-- intro T
+-- induction T with
+-- | leaf => rfl
+-- | node t₁ t₂ ih₁ ih₂ =>
+--   simp [full_binary_tree.height, binary_tree.height]
+--   rw [ih₁, ih₂]
+
+-- theorem full_binary_tree_no_nodes_eq_binary_tree_of_full_binary_tree :
+--   (T : full_binary_tree) →
+--   T.number_of_nodes = (binary_tree_of_full_binary_tree T).number_of_nodes := by
+--   intro T
+--   induction T with
+--   | leaf => rfl
+--   | node t₁ t₂ ih₁ ih₂ =>
+--     simp [full_binary_tree.number_of_nodes, binary_tree.number_of_nodes]
+--     rw [ih₁, ih₂]
+
+-- inductive binary_tree_with_nodes : (n : ℕ) → Type
+-- | leaf : binary_tree_with_nodes 1
+-- | node₁ : binary_tree_with_nodes n → binary_tree_with_nodes (n+1)
+-- | node₂ : binary_tree_with_nodes n → binary_tree_with_nodes m → binary_tree_with_nodes (n+m+1)
 
 
+-- inductive vector (A : Type) : (n : ℕ) → Type
+-- | nil : vector A 0
+-- | cons : vector A n → vector A (n+1)
+
+-- def vector.length {A : Type} : (n : ℕ) → vector A n → ℕ
+-- | n, _ => n
+
+-- def my_vector : vector ℕ 2 :=
+--   vector.cons ( vector.cons ( vector.nil ))
 
 
---
--- EXAMPLE proof of equivalence between Bool and Fin 2
---
-def bool_to_fin (b : Bool) : Fin 2 := if b then 1 else 0
-def fin_to_bool (i : Fin 2) : Bool := i.val == 1
+-- def plane_tree_to_full_binary_tree : plane_tree → full_binary_tree
+-- | (plane_tree.node []) => full_binary_tree.leaf
+-- -- | (plane_tree.node []) => full_binary_tree.node  (full_binary_tree.leaf) (full_binary_tree.leaf) ????????
+-- | (plane_tree.node (T::l)) => full_binary_tree.node (plane_tree_to_full_binary_tree T) (plane_tree_to_full_binary_tree (plane_tree.node l))
 
-#eval bool_to_fin true -- returns 1
-#eval fin_to_bool 1 -- returns true
-
-example : Bool ≃ Fin 2 := by
-  -- construct the equivalence
-  apply Equiv.mk bool_to_fin fin_to_bool
-  {
-    intro b
-    rw[bool_to_fin]
-    rw[fin_to_bool]
-    cases b with
-    | false => simp
-    | true => simp
-  }
-  {
-    intro n
-    rw[fin_to_bool]
-    rw[bool_to_fin]
-    fin_cases n
-    repeat simp
-  }
+-- def full_binary_tree_to_plane_tree : full_binary_tree → plane_tree
+-- | full_binary_tree.leaf => plane_tree.node []
+-- | (full_binary_tree.node T₁ T₂) => plane_tree.node [full_binary_tree_to_plane_tree T₁, full_binary_tree_to_plane_tree T₂]

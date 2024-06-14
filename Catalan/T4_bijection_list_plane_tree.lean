@@ -1,7 +1,5 @@
 import Mathlib
-
-inductive plane_tree : Type
-| node : List plane_tree → plane_tree
+import «Catalan».Tasks -- import the smaller tasks
 
 def bijection_list_plane_tree_and_plane_tree : List plane_tree ≃ plane_tree :=
   {
@@ -16,4 +14,4 @@ def bijection_list_plane_tree_and_plane_tree : List plane_tree ≃ plane_tree :=
       intro t
       cases t
       case node N => rfl
-      }
+  }

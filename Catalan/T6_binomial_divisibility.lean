@@ -71,12 +71,12 @@ theorem not_eq_zero_imp_zero_ge (n : ℕ) : ¬ n = 0 → 0 < n := by
 
 theorem choose_eq (n : ℕ) : Nat.choose (2*n) n = (n+1) * (Nat.choose (2*n) n - Nat.choose (2*n) (n+1)) := by
   by_cases h : n = 0
-  case pos =>
+  case pos => -- case when n = 0
     rw[h]
     rw[Nat.choose_zero_right]
     rw[Nat.one_eq_succ_zero]
     rw[Nat.choose_zero_succ]
-  case neg =>
+  case neg => -- case when n > 0
     have h2 : 0 < n := not_eq_zero_imp_zero_ge n h -- we need the 0 < n to multiply both sides by n
     apply Nat.eq_of_mul_eq_mul_left h2 -- multipyl both sides by n
     rw [← Nat.mul_assoc]

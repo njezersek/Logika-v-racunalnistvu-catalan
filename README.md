@@ -15,6 +15,7 @@ Below is a list of finished tasks included in this repository:
   - ([T4](Catalan/T4_bijection_list_plane_tree.lean)) Construction of bijection list PlaneTree ∼= PlaneTree.
   - ([T5](Catalan/T5_rotating_isomorphism.lean)) Construction of the rotating isomorphism.
   - ([T6](Catalan/T6_binomial_divisibility.lean)) Proof that (2n choose n) is divisible by (n+1).
+  - Attempt: ([T8](T8_catalan_ballot_isomorphism.ipynb)) Construction of the bijection between Catalan numbers and ballot sequences in Python (we didn't manage to translate the code to Lean).
 
 All the code is located in the /Catalan folder. All small tasks are gathered in the Tasks.lean file, while each large task has it's own seperate file.
 
